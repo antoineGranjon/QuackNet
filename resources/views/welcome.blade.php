@@ -69,7 +69,6 @@
         <div class="top-right links">
             @auth
                 <a href="{{ url('/home') }}">Home</a>
-                <a href="{{ route('') }}"></a>
             @else
                 <a href="{{ route('login') }}">Login</a>
 
@@ -83,12 +82,6 @@
     <div class="content">
         <div class="title m-b-md">
             Quack
-        </div>
-        <div class="links">
-            <a href="{{route('Quack.index')}}">All the Quacks</a>
-            <a href="{{route('Quack.create')}}">Create Quack</a>
-            <a href="{{route('Quack.index')}}">Edit Quack</a>
-            <a href="{{route('Quack.index')}}">Delete Quack</a>
         </div>
     </div>
 </div>

@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Quack;
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
-class QuackController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +15,8 @@ class QuackController extends Controller
      */
     public function index()
     {
-        return view('Quack.index');
+        $user = Auth::user();
+        return view('User.index', ['user' => $user]);
     }
 
     /**
@@ -24,7 +26,7 @@ class QuackController extends Controller
      */
     public function create()
     {
-        return view('Quack.create');
+        //
     }
 
     /**
@@ -41,10 +43,10 @@ class QuackController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Quack  $quack
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Quack $quack)
+    public function show($id)
     {
         //
     }
@@ -52,38 +54,42 @@ class QuackController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Quack  $quack
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Quack $quack)
+    public function edit()
     {
-        //
+        $user = Auth::user();
+        return view('User.edit', ['user' => $user]);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Quack  $quack
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Quack $quack)
+    public function update()
     {
-        //
+        $user = auth()->user();
+        auth()->user()->update([
+            'firstname' => request('firstname'),
+            'lastname' => request('lastname'),
+            'password' => bcrypt(request('password')),
+        ]);
+        $user->save();
+
+        return redirect()->route('User.index');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Quack  $quack
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Quack $quack)
-    {
-        //
-    }
-
-    public function delete(Quack $quack)
+    public function destroy($id)
     {
         //
     }

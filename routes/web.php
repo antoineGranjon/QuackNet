@@ -15,7 +15,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::resource('Quack', 'QuackController');
+Route::resource('Tweet', 'TweetController');
+Route::resource('User', 'UserController');
+
+
 
 Auth::routes();
 
