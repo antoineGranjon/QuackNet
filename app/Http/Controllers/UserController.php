@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Redirect;
 
 class UserController extends Controller
 {
@@ -29,10 +32,16 @@ class UserController extends Controller
         //
     }
 
+    public function editProfile()
+    {
+        $user = Auth::user();
+        return view('User.editProfile', ['user' => $user]);
+    }
+
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -43,7 +52,7 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -54,39 +63,46 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function edit()
     {
-        $user = Auth::user();
-        return view('User.edit', ['user' => $user]);
+
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function update()
+    public function update(Request $request)
     {
-        $user = auth()->user();
-        auth()->user()->update([
-            'firstname' => request('firstname'),
-            'lastname' => request('lastname'),
-            'password' => bcrypt(request('password')),
+        $user = Auth::user();
+
+        $request->validate([
+            'firstname' => 'required',
+            'lastname' => 'required',
+            'password' => 'required',
         ]);
+
+        $user->firstname = $request->input('firstname');
+        $user->lastname = $request->input('lastname');
+        if (Hash::check($request->password, auth()->user()->password)) {
+            return back()->withErrors();
+        }
+        $user->password = Hash::make($request->password);
         $user->save();
 
-        return redirect()->route('User.index');
+        return redirect(route('User.index'));
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

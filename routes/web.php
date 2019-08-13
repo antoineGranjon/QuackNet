@@ -11,15 +11,13 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'HomeController@welcome')->name('welcome');
+
+Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get('/User/edit', 'UserController@editProfile')->name('User.editProfile');
 
 Route::resource('Tweet', 'TweetController');
 Route::resource('User', 'UserController');
 
-
-
 Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
